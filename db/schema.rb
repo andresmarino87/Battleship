@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160823195851) do
+ActiveRecord::Schema.define(version: 20160823210139) do
 
   create_table "boards", force: :cascade do |t|
     t.integer  "game_id",    null: false
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20160823195851) do
     t.string   "current_user_id",                     null: false
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.string   "room",                                null: false
   end
 
 end
