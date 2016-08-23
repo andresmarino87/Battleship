@@ -1,6 +1,18 @@
 class GameController < ApplicationController
+	skip_before_action :verify_authenticity_token
+
     respond_to :json
 	def index
+
+	end
+
+	def new_game
+		@game = Game.new(game_params)
+        render json: @game, status: 200
+	end
+
+	def join_game
+
 	end
 
 	def show_board
@@ -14,8 +26,12 @@ class GameController < ApplicationController
        			[1,1,1,1,1,1,1,1,1,1],
        			[1,1,1,1,1,1,1,1,1,1],
        			[1,1,1,1,1,1,1,1,1,1]]
-		test = Hash[board.map.with_index { |value, index| [index, value] }]
-#		jboard= Hash[@board.map { |l| [l.column, [l.test, l.test2, l.test3]] }]
-        render json: test, status: 200
+		boardHash = Hash[board.map.with_index { |value, index| [index, value] }]
+        render json: boardHash, status: 200
    	end
+
+	private
+	def game_params
+		params.require(:game).permit(:room,:player1)
+	end
 end

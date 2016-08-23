@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
-  get 'game/index'
-  get 'game/show_board'
+    get 'game/index'
+    get 'game/show_board'
+    post 'game/new_game'
+    put 'game/join_game'
+
+
 
   root 'game#index'
   # The priority is based upon order of creation: first created -> highest priority.
