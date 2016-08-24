@@ -1,10 +1,9 @@
 Rails.application.routes.draw do
     get 'games/:id', to: 'game#index'
-    get 'game/show_board'
+    get 'games/:id/show_board', to: 'game#show_board'
     post 'games/:id/new_game/', to: 'game#new_game'
-    put 'game/join_game'
-
-  root 'game#index'
+    put 'games/:id/join_game', to: 'game#join_game'
+    root 'game#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

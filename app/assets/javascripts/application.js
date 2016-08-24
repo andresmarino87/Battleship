@@ -17,29 +17,38 @@
 //= require_tree .
 
 $(document).on("click","#create_game",function(){
-	alert('click');
-    $.ajax({url: "/game/new_game", type: 'post', success: function(result){
-		$( '#my_board' ).append('<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th></tr>');
-		for (var i = 0; i < 10; i++) {
-			var testToApend='';			
-	    	for(var j = 0; j< 10; j++){
-	    		if(j == 0){
-	    			testToApend = testToApend + '<tr><td>'+(i+1)+'</td>' 
-	    		}
-	    		testToApend = testToApend + '<td><p class="valid_click" id="'+i+'-'+j+'">O</p></td>'
- 				if(j == 9){
-		    		testToApend = testToApend + '</tr>'
-					$( '#my_board tr:last').after(testToApend);
-	    		}
- 			}
-    	}
+	var player = $('#my_id').attr('value');
+    $.ajax({url: "/games/"+player+"/new_game", type: 'post', success: function(result){
+    	draw_board('#my_board',result,false);
+		draw_board('#opponent_board',result,true);
     }, dataType: "json"});    
     return false;
 });
 
-//$(document).on("click","#create_game",function(){
+function draw_board(id,result,clickeable){
+	$( id ).append('<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th></tr>');
+		for (var i = 0; i < 10; i++) {
+			var testToApend='';			
+	    	for(var j = 0; j< 10; j++){
+	    		if(j == 0){
+	    			testToApend = testToApend + '<tr><td>'+(i+1)+'</td>';
+	    		}
+	    		if(clickeable){
+		    		testToApend = testToApend + '<td><p class="valid_click" id="'+i+'-'+j+'">O</p></td>';
+		    	}else{
+		    		testToApend = testToApend + '<td><p id="'+i+'-'+j+'">O</p></td>';
+		    	}
+ 				if(j == 9){
+		    		testToApend = testToApend + '</tr>';
+					$( id+' tr:last').after(testToApend);
+    		}
+ 		}
+    }
+}
 
-//});
+$(document).on("click","#join_game",function(){
+	alert('click');
+});
 
 
 
