@@ -1,18 +1,27 @@
 class GameController < ApplicationController
 	skip_before_action :verify_authenticity_token
+	@player
 
     respond_to :json
 	def index
-
+		@player = params[:id]
 	end
 
 	def new_game
-		@game = Game.new(game_params)
-        render json: @game, status: 200
+		d = Date.parse(Time.now.to_s)
+		@game = Game.create(player1: params[:id], player2: "0", current_user_id: params[:id], room: "Room"+(d >> 1).strftime("%Y-%m-%d-%H:%M"))
+       	render json: @game, status: 200
 	end
 
 	def join_game
-
+		d = Date.parse(Time.now.to_s)
+		@game = Game.find(params[:game_id])
+		@game.player2 = params[:id]
+		if(@game.save)
+	       	render json: @game, status: 200
+	    else
+		    @game.errors.full_messages
+		end
 	end
 
 	def show_board
@@ -32,6 +41,6 @@ class GameController < ApplicationController
 
 	private
 	def game_params
-		params.require(:game).permit(:room,:player1)
+		params.require(:game).permit(:room)
 	end
 end

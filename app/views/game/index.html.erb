@@ -1,5 +1,22 @@
-<h1>Battleship</h1>
-
-<button id='load_game'>Join a Game</button>
-<table id="board">
-</table>
+<div class="container">
+	<h1>Battleship</h1>
+	<h3>Player <%= @player.inspect %></h3>
+	<div class="col-md-12">
+		<div class="row">
+			<button id="create_game">Create Game</button>
+			<button id="join_game">Join Game</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="col-md-6">
+				<table id="my_board">
+				</table>
+			</div>
+			<div class="col-md-6">
+				<table id="opponent_board">
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
