@@ -14,9 +14,9 @@ class GameController < ApplicationController
 	end
 
 	def join_game
-		d = Date.parse(Time.now.to_s)
-		@game = Game.find(params[:game_id])
+		@game = Game.where(state:'waiting').order(created_at: :desc).first
 		@game.player2 = params[:id]
+		@game.state = 'setup'
 		if(@game.save)
 	       	render json: @game, status: 200
 	    else

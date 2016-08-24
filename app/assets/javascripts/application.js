@@ -47,7 +47,12 @@ function draw_board(id,result,clickeable){
 }
 
 $(document).on("click","#join_game",function(){
-	alert('click');
+	var player = $('#my_id').attr('value');
+    $.ajax({url: "/games/"+player+"/join_game", type: 'put', success: function(result){
+    	draw_board('#my_board',result,false);
+		draw_board('#opponent_board',result,true);
+    }, dataType: "json"});    
+    return false;
 });
 
 
