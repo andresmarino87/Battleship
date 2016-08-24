@@ -37,8 +37,25 @@ ready = function() {
     	return false;
 	});
 
+	//$(document).on("click","#join_game",function(){
+	$( "#join_game" ).click(function(){
+		var player = $('#my_id').attr('value');
+    	$.ajax({url: "/games/"+player+"/join_game", type: 'put', success: function(result){
+			$("#my_board").attr("value",result.game_id);
+    		draw_board('#my_board',result.board[1],false);
+			$("#opponent_board").attr("value",result.game_id);
+			draw_board('#opponent_board',result.board[0],true);
+    	}, dataType: "json"});    
+    	return false;
+	});
+
+	$(document).on("click",".valid_click",function(e){
+	//$( ".valid_click" ).click(function(e){
+		$( this ).text("H");
+	});//= require websocket_rails/main
+
 	function draw_board(id,result,clickeable){
-		$( id ).append('<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th></tr>');
+		$( id ).append('<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th></tr>');
 		for (var i = 0; i < 10; i++) {
 			var testToApend='';			
     		for(var j = 0; j< 10; j++){
@@ -63,21 +80,6 @@ ready = function() {
 	 		}
    		}
 	}		
-
-	//$(document).on("click","#join_game",function(){
-	$( "#join_game" ).click(function(){
-		var player = $('#my_id').attr('value');
-    	$.ajax({url: "/games/"+player+"/join_game", type: 'put', success: function(result){
-    		draw_board('#my_board',result,false);
-			draw_board('#opponent_board',result,true);
-    	}, dataType: "json"});    
-    	return false;
-	});
-
-	$(document).on("click",".valid_click",function(e){
-	//$( ".valid_click" ).click(function(e){
-		$( this ).text("H");
-	});//= require websocket_rails/main
 };
 
 

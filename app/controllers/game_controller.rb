@@ -20,7 +20,7 @@ class GameController < ApplicationController
 		@game.player2 = params[:id]
 		@game.state = 'setup'
 		if(@game.save)
-	       	render json: @game, status: 200
+	       	render json: (@game.as_json).merge(@game.board.as_json), status: 200
 	    else
 		    @game.errors.full_messages
 		end
