@@ -19,7 +19,8 @@
 
 var ready;
 ready = function() {
-    var dispatcher = new WebSocketRails('localhost:3000/websocket');
+    var dispatcher = new WebSocketRails('https://battleshipruby.herokuapp.com/websocket');
+//    var dispatcher = new WebSocketRails('localhost:3000/websocket');
 	dispatcher.on_open = function(data) {
         console.log('Connection has been established: ', data);
   //      dispatcher.trigger('hello', 'Hello, there!');
