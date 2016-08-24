@@ -27,7 +27,8 @@ gem 'responders', '~> 2.0'
 
 gem 'bootstrap-sass', '~> 3.2.0'
 gem 'autoprefixer-rails'
-
+gem 'websocket-rails'
+gem 'faye-websocket', '0.10.0'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

@@ -8,9 +8,11 @@ class GameController < ApplicationController
 	end
 
 	def new_game
+        board = Array.new(2) { Array.new(10) { Array.new(10, 0) } }
 		d = Date.parse(Time.now.to_s)
 		@game = Game.create(player1: params[:id], player2: "0", current_user_id: params[:id], room: "Room"+(d >> 1).strftime("%Y-%m-%d-%H:%M"))
-       	render json: @game, status: 200
+ 		@board = Board.create(game_id: @game.id,board: board)
+       	render json: (@game.as_json).merge(@board.as_json), status: 200
 	end
 
 	def join_game
@@ -25,18 +27,8 @@ class GameController < ApplicationController
 	end
 
 	def show_board
-        board = [[1,1,1,1,1,1,1,1,1,1],
-				[1,1,1,1,1,1,1,1,1,1],
-        		[1,1,1,1,1,1,1,1,1,1],
-        		[1,1,1,1,1,1,1,1,1,1],
-       			[1,1,1,1,1,1,1,1,1,1],
-       			[1,1,1,1,1,1,1,1,1,1],
-       			[1,1,1,1,1,1,1,1,1,1],
-       			[1,1,1,1,1,1,1,1,1,1],
-       			[1,1,1,1,1,1,1,1,1,1],
-       			[1,1,1,1,1,1,1,1,1,1]]
-		boardHash = Hash[board.map.with_index { |value, index| [index, value] }]
-        render json: boardHash, status: 200
+		@game = Game.find(params[:id])
+		render json: @game.board, status: 200
    	end
 
 	private
