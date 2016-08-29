@@ -44,14 +44,14 @@ ready = function() {
 	});
 
 	channel.bind('joined_game', function(data) {
-		console.log("test");
-		console.log(data);
 		$( '#join_game' ).hide();
-		current_player = data.current_user_id;
-		$("#my_board").attr("value",data.game_id);
-		draw_board('#my_board',data.board[1],false);
-		$("#opponent_board").attr("value",data.game_id);
-		draw_board('#opponent_board',data.board[0],true);
+		if(data.player1 != $('#my_id').attr('value')){
+			current_player = data.current_user_id;
+			$("#my_board").attr("value",data.game_id);
+			draw_board('#my_board',data.board[1],false);
+			$("#opponent_board").attr("value",data.game_id);
+			draw_board('#opponent_board',data.board[0],true);
+		}
 	});
 
 //    channel.bind()
@@ -71,14 +71,6 @@ ready = function() {
 
 	//Join a existing game
 	$( "#join_game" ).click(function(){
-//		var player = $('#my_id').attr('value');
-//		$.ajax({url: "/games/"+player+"/join_game", type: 'put', success: function(result){
-//			$("#my_board").attr("value",result.game_id);
-//			draw_board('#my_board',result.board[1],false);
-//			$("#opponent_board").attr("value",result.game_id);
-//			draw_board('#opponent_board',result.board[0],true);
-//		}, dataType: "json"});    
-//		return false;				
 		var input = { player: $('#my_id').attr('value'), game_id: $( "#join_game" ).attr('game_id')};
 		dispatcher.trigger('move.join_game', input);
 		return false;

@@ -9,7 +9,7 @@ class MoveController < WebsocketRails::BaseController
 
 	#Join a game
 	def join_game
-		@game = join_game message
+		@game = user_join_game message[:game_id], message[:player]
 		WebsocketRails[:updates].trigger(:joined_game, @game)
 	end
 

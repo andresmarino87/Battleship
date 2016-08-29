@@ -9,24 +9,22 @@ module GameHelper
 	end
 
 	#Join a Game
-#	def join_game
-	def join_game(data)
-#		byebug
-		@game = Game.find(data[:player])
-		#if @game.open?
-		#	if(@game.not_same_player(player_id))
-				@game.player2 = data[:player]
+	def user_join_game(game_id, player)
+		@game = Game.find(game_id)
+		if @game.open?
+			if !@game.same_player? player
+				@game.player2 = player
 				@game.state = 'setup'
-		#		if(@game.save)
+				if(@game.save)
 					return (@game.as_json).merge(@game.board.as_json)
-		#		else
-		#			return  @game.errors.full_messages.as_json
-		#		end
-		#	else
+				else
+					return  @game.errors.full_messages.as_json
+				end
+			else
 		#		return (@game.as_json).merge(@game.board.as_json)
-		#	end
-		#else
+			end
+		else
 		#	return (@game.as_json).merge(@game.board.as_json)
-		#end
+		end
 	end
 end
