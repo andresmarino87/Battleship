@@ -19,72 +19,106 @@
 
 var ready;
 ready = function() {
-    var dispatcher = new WebSocketRails('https://battleshipruby.herokuapp.com/websocket');
-//    var dispatcher = new WebSocketRails('localhost:3000/websocket');
+	$( '#join_game' ).hide();
+	var current_player = null;
+//    var dispatcher = new WebSocketRails('https://battleshipruby.herokuapp.com/websocket');
+	var dispatcher = new WebSocketRails('localhost:3000/websocket');
 	dispatcher.on_open = function(data) {
-        console.log('Connection has been established: ', data);
-  //      dispatcher.trigger('hello', 'Hello, there!');
-    }
+		console.log('Connection has been established: ', data);
+	}
 
-	//$(document).on("click","#create_game",function(){
-	$( "#create_game" ).click(function(){
-		var player = $('#my_id').attr('value');
-	    $.ajax({url: "/games/"+player+"/new_game", type: 'post', success: function(result){
-			$("#my_board").attr("value",result.game_id);
-    		draw_board('#my_board',result.board[0],false);
-			$("#opponent_board").attr("value",result.game_id);
-			draw_board('#opponent_board',result.board[1],true);
-    	}, dataType: "json"});    
-    	return false;
+	// Handle responses
+	var channel = dispatcher.subscribe('updates');
+	channel.bind('created_game', function(data) {
+		$( '#create_game' ).hide();
+		if(data.player1 != $('#my_id').attr('value')){
+			$( '#join_game' ).show();
+			$( '#join_game' ).attr('game_id',data.game_id)
+		}else{
+			current_player = data.current_user_id;
+			$("#my_board").attr("value",data.game_id);
+			draw_board('#my_board',data.board[0],false);
+			$("#opponent_board").attr("value",data.game_id);
+			draw_board('#opponent_board',data.board[1],true);
+		}
 	});
 
-	//$(document).on("click","#join_game",function(){
+	channel.bind('joined_game', function(data) {
+		console.log("test");
+		console.log(data);
+		$( '#join_game' ).hide();
+		current_player = data.current_user_id;
+		$("#my_board").attr("value",data.game_id);
+		draw_board('#my_board',data.board[1],false);
+		$("#opponent_board").attr("value",data.game_id);
+		draw_board('#opponent_board',data.board[0],true);
+	});
+
+//    channel.bind()
+//    dispatcher.bind('updates.update', function(data) {
+//		$("#my_board").attr("value",data.game_id);
+  // 		draw_board('#my_board',data.board[0],false);
+	//	$("#opponent_board").attr("value",data.game_id);
+//		draw_board('#opponent_board',data.board[1],true);
+  //  });
+
+	//Create a new game
+	$( "#create_game" ).click(function(){
+		var input = { player: $('#my_id').attr('value')};
+		dispatcher.trigger('move.create_game', input);
+		return false;
+	});
+
+	//Join a existing game
 	$( "#join_game" ).click(function(){
-		var player = $('#my_id').attr('value');
-    	$.ajax({url: "/games/"+player+"/join_game", type: 'put', success: function(result){
-			$("#my_board").attr("value",result.game_id);
-    		draw_board('#my_board',result.board[1],false);
-			$("#opponent_board").attr("value",result.game_id);
-			draw_board('#opponent_board',result.board[0],true);
-    	}, dataType: "json"});    
-    	return false;
+//		var player = $('#my_id').attr('value');
+//		$.ajax({url: "/games/"+player+"/join_game", type: 'put', success: function(result){
+//			$("#my_board").attr("value",result.game_id);
+//			draw_board('#my_board',result.board[1],false);
+//			$("#opponent_board").attr("value",result.game_id);
+//			draw_board('#opponent_board',result.board[0],true);
+//		}, dataType: "json"});    
+//		return false;				
+		var input = { player: $('#my_id').attr('value'), game_id: $( "#join_game" ).attr('game_id')};
+		dispatcher.trigger('move.join_game', input);
+		return false;
 	});
 
 	$(document).on("click",".valid_click",function(e){
-	//$( ".valid_click" ).click(function(e){
-		$( this ).text("H");
-	});//= require websocket_rails/main
+		var shot = (e.target.id).split("-");
+		shot = { player: $('#my_id').attr('value'),
+						x: shot[0],
+						y: shot[1]};
+		dispatcher.trigger('move.shot_bullet', shot);
+	});
 
 	function draw_board(id,result,clickeable){
 		$( id ).append('<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th></tr>');
 		for (var i = 0; i < 10; i++) {
 			var testToApend='';			
-    		for(var j = 0; j< 10; j++){
-    			var icon = "O"
-	    		if(j == 0){
-	    			testToApend = testToApend + '<tr><td>'+(i+1)+'</td>';
-	   			}
-	   			if(result[i][j] == 1){
-	   				icon = M;
-	   			}else if(result[i][j] == 2){
-	   				icon = H;
-	   			}
-	   			if(clickeable){
-	    			testToApend = testToApend + '<td><p class="valid_click" id="'+i+'-'+j+'">'+icon+'</p></td>';
+			for(var j = 0; j< 10; j++){
+				var icon = "O"
+				if(j == 0){
+					testToApend = testToApend + '<tr><td>'+(i+1)+'</td>';
+				}
+				if(result[i][j] == 1){
+					icon = M;
+				}else if(result[i][j] == 2){
+					icon = H;
+				}
+				if(clickeable){
+					testToApend = testToApend + '<td><p class="valid_click" id="'+i+'-'+j+'">'+icon+'</p></td>';
 				}else{
-		   			testToApend = testToApend + '<td><p id="'+i+'-'+j+'">'+icon+'</p></td>';
-		    	}
- 				if(j == 9){
-	    			testToApend = testToApend + '</tr>';
+					testToApend = testToApend + '<td><p id="'+i+'-'+j+'">'+icon+'</p></td>';
+				}
+				if(j == 9){
+					testToApend = testToApend + '</tr>';
 					$( id+' tr:last').after(testToApend);
-	  			}
-	 		}
-   		}
+				}
+			}
+		}
 	}		
 };
 
-
 $(document).ready(ready);
 $(document).on('page:load', ready);
-
-

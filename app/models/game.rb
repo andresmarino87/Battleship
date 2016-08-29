@@ -4,11 +4,15 @@ class Game < ActiveRecord::Base
 	validates :state, inclusion: { in: ['waiting', 'setup', 'playing', 'over'] }
 
 	def is_full?
-		second_player_id != 0
+		player2 != 0
 	end
 
 	def open?
 		!is_full?
+	end
+
+	def same_player?(player)
+		player1 == player
 	end
 
 #  def players
