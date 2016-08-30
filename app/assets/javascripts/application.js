@@ -69,8 +69,8 @@ ready = function() {
 	//Create a new game
 	$( "#create_game" ).click(function(){
 		var input = { player: $('#my_id').attr('value')};
-		dispatcher.trigger('move.create_game', input);
-		console.log('Hello');
+		var test = dispatcher.trigger('move.create_game', input);
+		console.log(test);
 		return false;
 	});
 
