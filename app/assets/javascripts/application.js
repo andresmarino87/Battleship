@@ -21,7 +21,7 @@ var ready;
 ready = function() {
 	$( '#join_game' ).hide();
 	var current_player = null;
-    var dispatcher = new WebSocketRails('battleshipruby.herokuapp.com/websocket');
+    var dispatcher = new WebSocketRails('rubybattleship.herokuapp.com/websocket');
 //	var dispatcher = new WebSocketRails('localhost:3000/websocket');
 	dispatcher.on_open = function(data) {
 		console.log('Connection has been established: ', data);
