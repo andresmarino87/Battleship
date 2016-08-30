@@ -66,10 +66,18 @@ ready = function() {
 //		draw_board('#opponent_board',data.board[1],true);
   //  });
 
+		var success = function(response) {
+		  console.log("Wow it worked: "+response.message);
+		}
+
+		var failure = function(response) {
+		  console.log("That just totally failed: "+response.name);
+		}
+
 	//Create a new game
 	$( "#create_game" ).click(function(){
 		var input = { player: $('#my_id').attr('value')};
-		var test = dispatcher.trigger('create_game', input);
+		var test = dispatcher.trigger('create_game', input, success, failure);
 		console.log(test);
 		return false;
 	});
