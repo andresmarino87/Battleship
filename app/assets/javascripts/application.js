@@ -30,6 +30,7 @@ ready = function() {
 	// Handle responses
 	var channel = dispatcher.subscribe('updates');
 	channel.bind('created_game', function(data) {
+		console.log('hi hi');
 		$( '#create_game' ).hide();
 		if(data.player1 != $('#my_id').attr('value')){
 			$( '#join_game' ).show();
@@ -69,6 +70,7 @@ ready = function() {
 	$( "#create_game" ).click(function(){
 		var input = { player: $('#my_id').attr('value')};
 		dispatcher.trigger('move.create_game', input);
+		console.log('Hello');
 		return false;
 	});
 
