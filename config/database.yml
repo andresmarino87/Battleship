@@ -22,4 +22,3 @@ test:
 
 production:
 	adapter: postgresql
-	database: d5ln9es1a4v6ur
