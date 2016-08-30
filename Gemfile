@@ -26,7 +26,7 @@ gem 'responders', '~> 2.0'
 gem 'bootstrap-sass', '~> 3.2.0'
 gem 'autoprefixer-rails'
 gem 'websocket-rails'
-gem 'faye-websocket', '0.10.0'
+#gem 'faye-websocket', '0.10.0'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -47,13 +47,14 @@ end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
+	gem 'web-console', '~> 2.0'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+	gem 'spring'
 end
 
 group :production, :staging do
-  gem "pg"
+	gem "pg"
+	gem 'rails_12factor', '0.0.2'
 end
 
