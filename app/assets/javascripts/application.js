@@ -69,7 +69,7 @@ ready = function() {
 	//Create a new game
 	$( "#create_game" ).click(function(){
 		var input = { player: $('#my_id').attr('value')};
-		var test = dispatcher.trigger('move.create_game', input);
+		var test = dispatcher.trigger('create_game', input);
 		console.log(test);
 		return false;
 	});
@@ -77,7 +77,7 @@ ready = function() {
 	//Join a existing game
 	$( "#join_game" ).click(function(){
 		var input = { player: $('#my_id').attr('value'), game_id: $( "#join_game" ).attr('game_id')};
-		dispatcher.trigger('move.join_game', input);
+		dispatcher.trigger('join_game', input);
 		return false;
 	});
 
@@ -86,7 +86,7 @@ ready = function() {
 		shot = { player: $('#my_id').attr('value'),
 						x: shot[0],
 						y: shot[1]};
-		dispatcher.trigger('move.shot_bullet', shot);
+		dispatcher.trigger('shot_bullet', shot);
 	});
 
 	function draw_board(id,result,clickeable){
