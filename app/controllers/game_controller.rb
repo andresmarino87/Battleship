@@ -1,5 +1,4 @@
 class GameController < ApplicationController
-	include GameHelper
 	skip_before_action :verify_authenticity_token
 	@player
 
