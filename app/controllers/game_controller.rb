@@ -4,12 +4,11 @@ class GameController < ApplicationController
 
 	respond_to :json
 	def index
-		@player = params[:id]
-	end
-
-	def show_board
-		@game = Game.find(params[:id])
-		render json: @game.board, status: 200
+		if params[:id]
+			@player = params[:id]
+		else
+			@player = "Please select an user in the URL path --> /games/1 or /games/2"
+		end
 	end
 
 	private

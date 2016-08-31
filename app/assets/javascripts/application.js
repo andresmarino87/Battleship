@@ -30,18 +30,17 @@ ready = function() {
 	// Handle responses
 	var channel = dispatcher.subscribe('updates');
 	channel.bind('created_game', function(data) {
-		console.log('hi hi');
-		console.log(data);
 		$( '#create_game' ).hide();
 		if(data.player1 != $('#my_id').attr('value')){
 			$( '#join_game' ).show();
 			$( '#join_game' ).attr('game_id',data.game_id)
 		}else{
 			current_player = data.current_user_id;
-			$("#my_board").attr("value",data.game_id);
+			$( "#my_board" ).attr("value",data.game_id);
 			draw_board('#my_board',data.board[0],false);
-			$("#opponent_board").attr("value",data.game_id);
+			$( "#opponent_board" ).attr("value",data.game_id);
 			draw_board('#opponent_board',data.board[1],true);
+			$( "#current_update_text" ).text("Waiting for the other player to join the game");
 		}
 	});
 
@@ -54,32 +53,27 @@ ready = function() {
 			$("#opponent_board").attr("value",data.game_id);
 			draw_board('#opponent_board',data.board[0],true);
 		}
+		current_player = data.current_user_id;
+		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shot");
 	});
 
     channel.bind('shot_taked',function(data){
 
 
     });
-//    dispatcher.bind('updates.update', function(data) {
-//		$("#my_board").attr("value",data.game_id);
-  // 		draw_board('#my_board',data.board[0],false);
-	//	$("#opponent_board").attr("value",data.game_id);
-//		draw_board('#opponent_board',data.board[1],true);
-  //  });
 
-		var success = function(response) {
-		  console.log("Wow it worked: "+response.message);
-		}
+	var success = function(response) {
+	  console.log("Wow it worked: "+response.message);
+	}
 
-		var failure = function(response) {
-		  console.log("That just totally failed: "+response.name);
-		}
+	var failure = function(response) {
+	  console.log("That just totally failed: "+response.name);
+	}
 
 	//Create a new game
 	$( "#create_game" ).click(function(){
 		var input = { player: $('#my_id').attr('value')};
-		var test = dispatcher.trigger('create_game', input, success, failure);
-		console.log(test);
+		dispatcher.trigger('create_game', input, success, failure);
 		return false;
 	});
 
@@ -91,11 +85,16 @@ ready = function() {
 	});
 
 	$(document).on("click",".valid_click",function(e){
-		var shot = (e.target.id).split("-");
-		shot = { player: $('#my_id').attr('value'),
+		if(current_player == $('#my_id').attr('value')){
+			var shot = (e.target.id).split("-");
+			shot = { player: $('#my_id').attr('value'),
+						game_id: $("#my_board").attr("value"),
 						x: shot[0],
 						y: shot[1]};
-		dispatcher.trigger('shot_bullet', shot);
+			dispatcher.trigger('shot_bullet', shot);
+		}else{
+			alert("Sorry it's not you turn");
+		}
 	});
 
 	function draw_board(id,result,clickeable){
