@@ -55,12 +55,12 @@ ready = function() {
 			draw_board('#opponent_board',data.board[0],true,"e");
 		}
 		current_player = data.current_user_id;
-		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shot");
+		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shoot");
 	});
 
     channel.bind('take_the_shot',function(data){
     	console.log(data)
-		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shot");
+		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shoot");
 		current_player = data.current_user_id;
 		if(data.player != $('#my_id').attr('value')){
 			$( '#m-'+data.x+'-'+data.y).text("M");
