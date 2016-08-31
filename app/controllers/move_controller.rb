@@ -4,9 +4,9 @@ class MoveController < WebsocketRails::BaseController
 	#Create a new game
 	def new_game 
 		logger.info "new_game Start the request...0"
-#		@game = create_game message[:player]
+		@game = create_game message[:player]
 		logger.info "new_game Start the request...1"
-		@game = "this is a test"
+#		@game = "this is a test"
 		WebsocketRails[:updates].trigger(:created_game, @game)
 	end 
 
