@@ -31,6 +31,7 @@ ready = function() {
 	var channel = dispatcher.subscribe('updates');
 	channel.bind('created_game', function(data) {
 		console.log('hi hi');
+		console.log(data);
 		$( '#create_game' ).hide();
 		if(data.player1 != $('#my_id').attr('value')){
 			$( '#join_game' ).show();
