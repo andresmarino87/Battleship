@@ -15,6 +15,15 @@ class Game < ActiveRecord::Base
 		player1 == player
 	end
 
+	def get_player_board_index(player)
+		if player1 == player
+			return 0
+		else
+			return 1
+		end
+	end
+
+
 #  def players
 #    [first_player, second_player]
 #  end

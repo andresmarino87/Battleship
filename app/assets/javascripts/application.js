@@ -37,10 +37,11 @@ ready = function() {
 		}else{
 			current_player = data.current_user_id;
 			$( "#my_board" ).attr("value",data.game_id);
-			draw_board('#my_board',data.board[0],false);
+			draw_board('#my_board',data.board[0],false,"m");
 			$( "#opponent_board" ).attr("value",data.game_id);
-			draw_board('#opponent_board',data.board[1],true);
+			draw_board('#opponent_board',data.board[1],true,"e");
 			$( "#current_update_text" ).text("Waiting for the other player to join the game");
+
 		}
 	});
 
@@ -49,17 +50,23 @@ ready = function() {
 		if(data.player1 != $('#my_id').attr('value')){
 			current_player = data.current_user_id;
 			$("#my_board").attr("value",data.game_id);
-			draw_board('#my_board',data.board[1],false);
+			draw_board('#my_board',data.board[1],false,"m");
 			$("#opponent_board").attr("value",data.game_id);
-			draw_board('#opponent_board',data.board[0],true);
+			draw_board('#opponent_board',data.board[0],true,"e");
 		}
 		current_player = data.current_user_id;
 		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shot");
 	});
 
-    channel.bind('shot_taked',function(data){
-
-
+    channel.bind('take_the_shot',function(data){
+    	console.log(data)
+		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shot");
+		current_player = data.current_user_id;
+		if(data.player != $('#my_id').attr('value')){
+			$( '#m-'+data.x+'-'+data.y).text("M");
+		}else{
+			$( '#e-'+data.x+'-'+data.y).text("M");
+		}
     });
 
 	var success = function(response) {
@@ -86,35 +93,41 @@ ready = function() {
 
 	$(document).on("click",".valid_click",function(e){
 		if(current_player == $('#my_id').attr('value')){
-			var shot = (e.target.id).split("-");
-			shot = { player: $('#my_id').attr('value'),
-						game_id: $("#my_board").attr("value"),
-						x: shot[0],
-						y: shot[1]};
-			dispatcher.trigger('shot_bullet', shot);
+			if($( this ).text() == "O"){
+				var shot = (e.target.id).split("-");
+				shot = { player: $('#my_id').attr('value'),
+							game_id: $("#my_board").attr("value"),
+							x: shot[1],
+							y: shot[2]};
+				dispatcher.trigger('shoot_bullet', shot);
+			}else{
+				alert("Can't shoot to this cell");
+			}
 		}else{
 			alert("Sorry it's not you turn");
 		}
 	});
 
-	function draw_board(id,result,clickeable){
+	function draw_board(id,result,clickeable,owner){
 		$( id ).append('<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th></tr>');
 		for (var i = 0; i < 10; i++) {
 			var testToApend='';			
 			for(var j = 0; j< 10; j++){
-				var icon = "O"
+				var icon = "O";
 				if(j == 0){
 					testToApend = testToApend + '<tr><td>'+(i+1)+'</td>';
 				}
 				if(result[i][j] == 1){
-					icon = M;
+					icon = "M";
 				}else if(result[i][j] == 2){
-					icon = H;
+					icon = "H";
+				}else if(result[i][j] == 3){
+					icon = "S";
 				}
 				if(clickeable){
-					testToApend = testToApend + '<td><p class="valid_click" id="'+i+'-'+j+'">'+icon+'</p></td>';
+					testToApend = testToApend + '<td><p class="valid_click" id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
 				}else{
-					testToApend = testToApend + '<td><p id="'+i+'-'+j+'">'+icon+'</p></td>';
+					testToApend = testToApend + '<td><p id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
 				}
 				if(j == 9){
 					testToApend = testToApend + '</tr>';

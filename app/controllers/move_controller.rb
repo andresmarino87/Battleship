@@ -14,18 +14,8 @@ class MoveController < WebsocketRails::BaseController
 	end
 
 	#shot a bullet
-	def shot_bullet
-
-
-#player: $('#my_id').attr('value'),
-#					game_id: $("#my_board").attr("value"),
-#					x: shot[0],
-#					y: shot[1]};
-
-		WebsocketRails[:updates].trigger(:update, @game)
-	end
-
-	def take_hit
-		WebsocketRails[:updates].trigger(:update, "test")
+	def shoot_bullet
+		@res = user_take_shot message
+		WebsocketRails[:updates].trigger(:take_the_shot, @res)
 	end
 end
