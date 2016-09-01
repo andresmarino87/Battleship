@@ -39,8 +39,7 @@ module GameHelper
 		index = @game.get_player_board_index data[:player]
 		@board.board[index][data[:x].to_i][data[:y].to_i] = 1
 		@board.save
-		@game.current_user_id =@game.toggle_current_player
-		@game.save
+		@game.toggle_current_player
 		return ( @game.as_json ).merge(message.as_json)
 	end
 end

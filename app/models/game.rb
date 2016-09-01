@@ -23,7 +23,6 @@ class Game < ActiveRecord::Base
 		end
 	end
 
-
 #  def players
 #    [first_player, second_player]
 #  end
@@ -38,9 +37,9 @@ class Game < ActiveRecord::Base
 
 	def toggle_current_player
 		if current_user_id == "1"
-			current_user_id = "2"
+			update_attribute(:current_user_id, "2")
 		else
-			current_user_id = "1"
+			update_attribute(:current_user_id, "1")
 		end
 	end
 end
