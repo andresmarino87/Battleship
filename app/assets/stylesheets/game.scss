@@ -1,3 +1,37 @@
 // Place all the styles related to the Game controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+$color-sea: #b4b4ff;
+$color-sea-hover: #4c4cff;
+$color-ship: rgba(0,0,0,0.5);
+$color-ship-border: #000;
+
+table{
+	border-collapse: collapse;
+	width: 440px;
+	width: 440px;
+	text-align: center;
+	td, th{
+		text-align: center;
+	}
+}
+
+.table_cell {
+	width: 40px;
+	height: 40px;
+	border: 1px solid $color-sea;
+    padding: 0;
+}
+
+.table_hover {
+	background-color: $color-sea-hover;
+}
+
+.ship_color {
+	width: 40px;
+	height: 40px;
+	border: 1px solid $color-ship-border;
+	background-color: $color-ship;
+    padding: 0;
+}
