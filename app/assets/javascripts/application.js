@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
 //= require turbolinks
 //= require websocket_rails/main
 //= require bootstrap-sprockets
@@ -21,8 +22,8 @@ var ready;
 ready = function() {
 	$( '#join_game' ).hide();
 	var current_player = null;
-    var dispatcher = new WebSocketRails('rubybattleship.herokuapp.com/websocket');
-//	var dispatcher = new WebSocketRails('localhost:3000/websocket');
+//    var dispatcher = new WebSocketRails('rubybattleship.herokuapp.com/websocket');
+	var dispatcher = new WebSocketRails('localhost:3000/websocket');
 	dispatcher.on_open = function(data) {
 		console.log('Connection has been established: ', data);
 	}
@@ -35,26 +36,18 @@ ready = function() {
 			$( '#join_game' ).show();
 			$( '#join_game' ).attr('game_id',data.game_id)
 		}else{
-			current_player = data.current_user_id;
-			$( "#my_board" ).attr("value",data.game_id);
-			draw_board('#my_board',data.board[0],false,"m");
-			$( "#opponent_board" ).attr("value",data.game_id);
-			draw_board('#opponent_board',data.board[1],true,"e");
+			initTable(data.current_user_id, data.game_id, data.board[0], data.board[1]);
 			$( "#current_update_text" ).text("Waiting for the other player to join the game");
-
 		}
 	});
 
 	channel.bind('joined_game', function(data) {
 		$( '#join_game' ).hide();
 		if(data.player1 != $('#my_id').attr('value')){
+			initTable(data.current_user_id, data.game_id, data.board[1], data.board[0]);
+		}else{
 			current_player = data.current_user_id;
-			$("#my_board").attr("value",data.game_id);
-			draw_board('#my_board',data.board[1],false,"m");
-			$("#opponent_board").attr("value",data.game_id);
-			draw_board('#opponent_board',data.board[0],true,"e");
 		}
-		current_player = data.current_user_id;
 		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shoot");
 	});
 
@@ -69,18 +62,10 @@ ready = function() {
 		}
     });
 
-	var success = function(response) {
-	  console.log("Wow it worked: "+response.message);
-	}
-
-	var failure = function(response) {
-	  console.log("That just totally failed: "+response.name);
-	}
-
 	//Create a new game
 	$( "#create_game" ).click(function(){
 		var input = { player: $('#my_id').attr('value')};
-		dispatcher.trigger('create_game', input, success, failure);
+		dispatcher.trigger('create_game', input);
 		return false;
 	});
 
@@ -109,13 +94,14 @@ ready = function() {
 	});
 
 	function draw_board(id,result,clickeable,owner){
-		$( id ).append('<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th></tr>');
+		$( id ).append('<tr><th></th><th><p>A</p></th><th><p>B</p></th><th><p>C</p></th><th><p>D</p></th><th><p>E</p></th><th><p>F</p></th><th><p>G</p></th><th><p>H</p></th><th><p>I</p></th><th><p>J</p></th></tr>');
 		for (var i = 0; i < 10; i++) {
-			var testToApend='';			
+			var toApend='';			
 			for(var j = 0; j< 10; j++){
 				var icon = "O";
+				var appendDrawable = '';
 				if(j == 0){
-					testToApend = testToApend + '<tr><td>'+(i+1)+'</td>';
+					toApend = toApend + '<tr><td>'+(i+1)+'</td>';
 				}
 				if(result[i][j] == 1){
 					icon = "M";
@@ -124,18 +110,62 @@ ready = function() {
 				}else if(result[i][j] == 3){
 					icon = "S";
 				}
+
 				if(clickeable){
-					testToApend = testToApend + '<td><p class="valid_click" id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
+					toApend = toApend + '<td class="table_cell"><p class="valid_click"  id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
 				}else{
-					testToApend = testToApend + '<td><p id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
+					toApend = toApend + '<td class="table_cell"><p id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
 				}
 				if(j == 9){
-					testToApend = testToApend + '</tr>';
-					$( id+' tr:last').after(testToApend);
+					toApend = toApend + '</tr>';
+					$( id+' tr:last').after(toApend);
 				}
 			}
 		}
-	}		
+	}
+
+	$( ".ship" ).draggable({
+			revert : function(event, ui) {
+            // on older version of jQuery use "draggable"
+            // $(this).data("draggable")
+            // on 2.x versions of jQuery use "ui-draggable"
+            // $(this).data("ui-draggable")
+            $(this).data("uiDraggable").originalPosition = {
+                top : 0,
+                left : 0
+            };
+            // return boolean
+            return !event;
+            // that evaluate like this:
+            // return event !== false ? false : true;
+        }
+	});
+
+	$( ".droppable_ship" ).droppable({classes: {
+        "ui-droppable-hover": "ship-hover"
+      },
+      drop: function( event, ui ) {
+        $( this )
+          .addClass( "ui-state-highlight" )
+          .find( "p" )
+            .html( "Dropped!" );
+      }
+    });
+
+	function addDrawableToTable(){
+		$('table#my_board td').addClass('droppable_ship');
+		return;
+	}
+
+	function initTable(user_id, game_id, myBoard, enemyBoard){
+		current_player = user_id;
+		$( "#my_board" ).attr("value", game_id);
+		draw_board('#my_board', myBoard, false, "m");
+		$( "#opponent_board" ).attr("value", game_id);
+		draw_board('#opponent_board', enemyBoard, true, "e");
+		addDrawableToTable();
+		return;
+	}
 };
 
 $(document).ready(ready);
