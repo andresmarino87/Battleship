@@ -23,14 +23,6 @@ class Game < ActiveRecord::Base
 		end
 	end
 
-#  def players
-#    [first_player, second_player]
-#  end
-
-#  def player_ids
-#    [first_player_id, second_player_id]
-#  end
-
 	def update_status(status)
 		update_attribute(:state, "#{Game::STATUSES[status.to_i]}" )
 	end
