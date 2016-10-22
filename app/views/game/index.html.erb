@@ -16,6 +16,27 @@
 			<div class="col-md-6">
 				<h2>Your board</h2>
 				<table id="my_board">
+					<tr>
+						<th></th>
+						<th><p>A</p></th>
+						<th><p>B</p></th>
+						<th><p>C</p></th>
+						<th><p>D</p></th>
+						<th><p>E</p></th>
+						<th><p>F</p></th>
+						<th><p>G</p></th>
+						<th><p>H</p></th>
+						<th><p>I</p></th>
+						<th><p>J</p></th>
+					</tr>
+					<% for i in 0..9 %>
+						<tr>
+							<th><%= (i+1) %></th>
+							<% for j in 0..9 %>
+								<td id=<%= "m-#{i}-#{j}" %> class="table_cell droppable_ship">O</td>
+							<% end %>
+						</tr>
+					<% end %>
 				</table>
 			</div>
 			<div class="col-md-6">
@@ -26,6 +47,10 @@
 		</div>
 	</div>
 	<div class="row col-md-12">
-		<div class="ship ship_color"></div>
+		<div class="ship ship_color">ein</div>
+		<div class="ship ship_color">zwei</div>
+		<div class="ship ship_color">drie</div>
+		<div class="ship ship_color">vier</div>
+		<div class="ship ship_color">fünf</div>
 	</div>
 </div>

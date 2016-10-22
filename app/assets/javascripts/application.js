@@ -22,8 +22,8 @@ var ready;
 ready = function() {
 	$( '#join_game' ).hide();
 	var current_player = null;
-    var dispatcher = new WebSocketRails('rubybattleship.herokuapp.com/websocket');
-//	var dispatcher = new WebSocketRails('localhost:3000/websocket');
+//    var dispatcher = new WebSocketRails('rubybattleship.herokuapp.com/websocket');
+	var dispatcher = new WebSocketRails('localhost:3000/websocket');
 	dispatcher.on_open = function(data) {
 		console.log('Connection has been established: ', data);
 	}
@@ -114,7 +114,7 @@ ready = function() {
 				if(clickeable){
 					toApend = toApend + '<td class="table_cell"><p class="valid_click"  id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
 				}else{
-					toApend = toApend + '<td class="table_cell"><p id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
+					toApend = toApend + '<td class="table_cell droppable_ship"><p id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
 				}
 				if(j == 9){
 					toApend = toApend + '</tr>';
@@ -141,10 +141,12 @@ ready = function() {
         }
 	});
 
-	$( ".droppable_ship" ).droppable({classes: {
-        "ui-droppable-hover": "ship-hover"
+	$( ".droppable_ship" ).droppable({
+		classes: {
+        "ui-droppable-hover": "table_hover"
       },
       drop: function( event, ui ) {
+      	console.log("drop!!!");
         $( this )
           .addClass( "ui-state-highlight" )
           .find( "p" )
@@ -153,14 +155,14 @@ ready = function() {
     });
 
 	function addDrawableToTable(){
-		$('table#my_board td').addClass('droppable_ship');
+//		$('table#my_board td').addClass('droppable_ship');
 		return;
 	}
 
 	function initTable(user_id, game_id, myBoard, enemyBoard){
 		current_player = user_id;
 		$( "#my_board" ).attr("value", game_id);
-		draw_board('#my_board', myBoard, false, "m");
+//		draw_board('#my_board', myBoard, false, "m");
 		$( "#opponent_board" ).attr("value", game_id);
 		draw_board('#opponent_board', enemyBoard, true, "e");
 		addDrawableToTable();
