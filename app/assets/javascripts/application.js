@@ -56,9 +56,11 @@ ready = function() {
 		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shoot");
 		current_player = data.current_user_id;
 		if(data.player != $('#my_id').attr('value')){
-			$( '#m-'+data.x+'-'+data.y).text("M");
+//			$( '#m-'+data.x+'-'+data.y).text("M");
+			$( '#m-'+data.x+'-'+data.y).addClass( "miss_shot" );
+
 		}else{
-			$( '#e-'+data.x+'-'+data.y).text("M");
+//			$( '#e-'+data.x+'-'+data.y).text("miss_shot");
 		}
     });
 
@@ -78,22 +80,26 @@ ready = function() {
 
 	$(document).on("click",".valid_click",function(e){
 		if(current_player == $('#my_id').attr('value')){
-			if($( this ).text() == "O"){
+//			if($( this ).text() == "O"){
+		      	console.log("begin!!!");
 				var shot = (e.target.id).split("-");
+
+				$(this).addClass( "miss_shot" );
 				shot = { player: $('#my_id').attr('value'),
 							game_id: $("#my_board").attr("value"),
 							x: shot[1],
 							y: shot[2]};
 				dispatcher.trigger('shoot_bullet', shot);
-			}else{
-				alert("Can't shoot to this cell");
-			}
+//			}else{
+//				alert("Can't shoot to this cell");
+//			}
 		}else{
 			alert("Sorry it's not you turn");
 		}
 	});
 
-	function draw_board(id,result,clickeable,owner){
+//	function draw_board(id,result,clickeable,owner){
+	function draw_enemy_board(id,result){
 		$( id ).append('<tr><th></th><th><p>A</p></th><th><p>B</p></th><th><p>C</p></th><th><p>D</p></th><th><p>E</p></th><th><p>F</p></th><th><p>G</p></th><th><p>H</p></th><th><p>I</p></th><th><p>J</p></th></tr>');
 		for (var i = 0; i < 10; i++) {
 			var toApend='';			
@@ -111,11 +117,11 @@ ready = function() {
 					icon = "S";
 				}
 
-				if(clickeable){
-					toApend = toApend + '<td class="table_cell"><p class="valid_click"  id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
-				}else{
+//				if(clickeable){
+					toApend = toApend + '<td class="table_cell"><p class="valid_click"  id="e-'+i+'-'+j+'">'+icon+'</p></td>';
+/*				}else{
 					toApend = toApend + '<td class="table_cell droppable_ship"><p id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
-				}
+				}*/
 				if(j == 9){
 					toApend = toApend + '</tr>';
 					$( id+' tr:last').after(toApend);
@@ -164,7 +170,7 @@ ready = function() {
 		$( "#my_board" ).attr("value", game_id);
 //		draw_board('#my_board', myBoard, false, "m");
 		$( "#opponent_board" ).attr("value", game_id);
-		draw_board('#opponent_board', enemyBoard, true, "e");
+		draw_enemy_board('#opponent_board', enemyBoard);
 		addDrawableToTable();
 		return;
 	}

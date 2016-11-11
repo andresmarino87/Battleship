@@ -6,6 +6,7 @@ $color-sea: #b4b4ff;
 $color-sea-hover: #4c4cff;
 $color-ship: rgba(0,0,0,0.5);
 $color-ship-border: #000;
+$color-miss-shot: #A74CAB;
 
 table{
 	border-collapse: collapse;
@@ -22,6 +23,21 @@ table{
 	height: 40px;
 	border: 1px solid $color-sea;
 	padding: 0;
+}
+
+.table_cell {
+	width: 40px;
+	height: 40px;
+	border: 1px solid $color-sea;
+	padding: 0;
+}
+
+.miss_shot {
+	width: 40px;
+	height: 40px;
+	border: 1px solid $color-miss-shot;
+	padding: 0;
+	background-color: $color-miss-shot;
 }
 
 .table_hover {
