@@ -80,7 +80,7 @@ ready = function() {
 
 	$(document).on("click",".valid_click",function(e){
 		if(current_player == $('#my_id').attr('value')){
-//			if($( this ).text() == "O"){
+			if(!($( this ).hasClass( "miss_shot" ) || $( this ).hasClass( "hit" ))){
 		      	console.log("begin!!!");
 				var shot = (e.target.id).split("-");
 
@@ -90,9 +90,9 @@ ready = function() {
 							x: shot[1],
 							y: shot[2]};
 				dispatcher.trigger('shoot_bullet', shot);
-//			}else{
-//				alert("Can't shoot to this cell");
-//			}
+			}else{
+				alert("Can't shoot to this cell");
+			}
 		}else{
 			alert("Sorry it's not you turn");
 		}
@@ -118,7 +118,7 @@ ready = function() {
 				}
 
 //				if(clickeable){
-					toApend = toApend + '<td class="table_cell"><p class="valid_click"  id="e-'+i+'-'+j+'">'+icon+'</p></td>';
+				toApend = toApend + '<td class="table_cell valid_click" id="e-'+i+'-'+j+'"></td>';
 /*				}else{
 					toApend = toApend + '<td class="table_cell droppable_ship"><p id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
 				}*/
