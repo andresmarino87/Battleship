@@ -88,6 +88,8 @@ ready = function() {
 				alert("Can't shoot to this cell");
 			}
 			$( this ).removeClass( "valid_click" );
+		} else {
+
 		}
 	});
 
@@ -142,10 +144,7 @@ ready = function() {
       },
       drop: function( event, ui ) {
       	console.log("drop!!!");
-        $( this )
-          .addClass( "ui-state-highlight" )
-          .find( "p" )
-            .html( "Dropped!" );
+        $(ui.draggable).detach().css({top: 0,left: 0}).appendTo(this);
       }
     });
 
