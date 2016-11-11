@@ -22,8 +22,8 @@ var ready;
 ready = function() {
 	$( '#join_game' ).hide();
 	var current_player = null;
-//    var dispatcher = new WebSocketRails('rubybattleship.herokuapp.com/websocket');
-	var dispatcher = new WebSocketRails('localhost:3000/websocket');
+    var dispatcher = new WebSocketRails('rubybattleship.herokuapp.com/websocket');
+//	var dispatcher = new WebSocketRails('localhost:3000/websocket');
 	dispatcher.on_open = function(data) {
 		console.log('Connection has been established: ', data);
 	}
@@ -56,11 +56,7 @@ ready = function() {
 		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shoot");
 		current_player = data.current_user_id;
 		if(data.player != $('#my_id').attr('value')){
-//			$( '#m-'+data.x+'-'+data.y).text("M");
 			$( '#m-'+data.x+'-'+data.y).addClass( "miss_shot" );
-
-		}else{
-//			$( '#e-'+data.x+'-'+data.y).text("miss_shot");
 		}
     });
 
@@ -81,9 +77,7 @@ ready = function() {
 	$(document).on("click",".valid_click",function(e){
 		if(current_player == $('#my_id').attr('value')){
 			if(!($( this ).hasClass( "miss_shot" ) || $( this ).hasClass( "hit" ))){
-		      	console.log("begin!!!");
 				var shot = (e.target.id).split("-");
-
 				$(this).addClass( "miss_shot" );
 				shot = { player: $('#my_id').attr('value'),
 							game_id: $("#my_board").attr("value"),
@@ -93,8 +87,7 @@ ready = function() {
 			}else{
 				alert("Can't shoot to this cell");
 			}
-		}else{
-			alert("Sorry it's not you turn");
+			$( this ).removeClass( "valid_click" );
 		}
 	});
 
@@ -117,11 +110,7 @@ ready = function() {
 					icon = "S";
 				}
 
-//				if(clickeable){
 				toApend = toApend + '<td class="table_cell valid_click" id="e-'+i+'-'+j+'"></td>';
-/*				}else{
-					toApend = toApend + '<td class="table_cell droppable_ship"><p id="'+owner+'-'+i+'-'+j+'">'+icon+'</p></td>';
-				}*/
 				if(j == 9){
 					toApend = toApend + '</tr>';
 					$( id+' tr:last').after(toApend);
@@ -160,18 +149,11 @@ ready = function() {
       }
     });
 
-	function addDrawableToTable(){
-//		$('table#my_board td').addClass('droppable_ship');
-		return;
-	}
-
 	function initTable(user_id, game_id, myBoard, enemyBoard){
 		current_player = user_id;
 		$( "#my_board" ).attr("value", game_id);
-//		draw_board('#my_board', myBoard, false, "m");
 		$( "#opponent_board" ).attr("value", game_id);
 		draw_enemy_board('#opponent_board', enemyBoard);
-		addDrawableToTable();
 		return;
 	}
 };
