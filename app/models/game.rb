@@ -23,6 +23,15 @@ class Game < ActiveRecord::Base
 		end
 	end
 
+	def get_other_player_board_index(player)
+		if player1 == player
+			return 1
+		else
+			return 0
+		end
+	end
+
+
 	def update_status(status)
 		update_attribute(:state, "#{Game::STATUSES[status.to_i]}" )
 	end

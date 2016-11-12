@@ -1,7 +1,8 @@
 module GameHelper
 	#Create a new game
-	def create_game(player_id)
+	def create_game(player_id, ships)
 		board = Array.new(2) { Array.new(10) { Array.new(10, 0) } }
+		set_ships_on_board(board,ships,0)
 		d = Date.parse(Time.now.to_s)
 		@game = Game.new(player1: player_id, player2: "0", current_user_id: player_id, room: "Room"+(d >> 1).strftime("%Y-%m-%d-%H:%M"))
 		if @game.save 
@@ -13,12 +14,15 @@ module GameHelper
 	end
 
 	#Join a Game
-	def user_join_game(game_id, player)
+	def user_join_game(game_id, player, ships)
 		@game = Game.find(game_id)
 		if @game.open?
 			if !@game.same_player? player
 				@game.player2 = player
 				@game.state = 'setup'
+				@board = @game.board 
+				set_ships_on_board(@board.board, ships, 1)
+				@board.save
 				if(@game.save)
 					return (@game.as_json).merge(@game.board.as_json)
 				else
@@ -32,14 +36,27 @@ module GameHelper
 		end
 	end
 
-		#Join a Game
+	#Take a shot
 	def user_take_shot(data)
 		@game = Game.find(data[:game_id])
 		@board = @game.board
-		index = @game.get_player_board_index data[:player]
-		@board.board[index][data[:x].to_i][data[:y].to_i] = 1
+		index = @game.get_other_player_board_index data[:player]
+		if  @board.board[index][data[:x].to_i][data[:y].to_i] == 3
+			@board.board[index][data[:x].to_i][data[:y].to_i] = 2
+			message[:hit] = 2
+		else
+			@board.board[index][data[:x].to_i][data[:y].to_i] = 1
+			message[:hit] = 1
+			@game.toggle_current_player
+		end
 		@board.save
-		@game.toggle_current_player
 		return ( @game.as_json ).merge(message.as_json)
+	end
+
+	private
+	def set_ships_on_board(board, ships, board_index)
+		ships.each do |ship|
+			board[board_index][ship[:x].to_i][ship[:y].to_i] = 3
+		end
 	end
 end

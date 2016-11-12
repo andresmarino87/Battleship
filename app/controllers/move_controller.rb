@@ -3,13 +3,13 @@ class MoveController < WebsocketRails::BaseController
 
 	#Create a new game
 	def new_game 
-		@game = create_game message[:player]
+		@game = create_game message[:player], message[:ships]
 		WebsocketRails[:updates].trigger(:created_game, @game)
 	end 
 
 	#Join a game
 	def join_game
-		@game = user_join_game message[:game_id], message[:player]
+		@game = user_join_game message[:game_id], message[:player], message[:ships]
 		WebsocketRails[:updates].trigger(:joined_game, @game)
 	end
 

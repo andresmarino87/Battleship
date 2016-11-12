@@ -22,8 +22,8 @@ var ready;
 ready = function() {
 	$( '#join_game' ).hide();
 	var current_player = null;
-    var dispatcher = new WebSocketRails('rubybattleship.herokuapp.com/websocket');
-//	var dispatcher = new WebSocketRails('localhost:3000/websocket');
+//    var dispatcher = new WebSocketRails('rubybattleship.herokuapp.com/websocket');
+	var dispatcher = new WebSocketRails('localhost:3000/websocket');
 	dispatcher.on_open = function(data) {
 		console.log('Connection has been established: ', data);
 	}
@@ -56,20 +56,34 @@ ready = function() {
 		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shoot");
 		current_player = data.current_user_id;
 		if(data.player != $('#my_id').attr('value')){
-			$( '#m-'+data.x+'-'+data.y).addClass( "miss_shot" );
+			$( '#m-'+data.x+'-'+data.y ).removeClass( "ship" );
+			if(data.hit == 2){
+				$( '#m-'+data.x+'-'+data.y ).addClass( "hit" );
+			}else{
+				$( '#m-'+data.x+'-'+data.y ).addClass( "miss_shot" );
+			}
+		}else{
+			if(data.hit == 2){
+				$( '#e-'+data.x+'-'+data.y ).addClass( "hit" );
+			}else{
+				$( '#e-'+data.x+'-'+data.y ).addClass( "miss_shot" );
+			}
+		
 		}
     });
 
 	//Create a new game
 	$( "#create_game" ).click(function(){
-		var input = { player: $('#my_id').attr('value')};
+		var positions = getShipLocations();
+		var input = { player: $('#my_id').attr('value'), ships: positions};
 		dispatcher.trigger('create_game', input);
 		return false;
 	});
 
 	//Join a existing game
 	$( "#join_game" ).click(function(){
-		var input = { player: $('#my_id').attr('value'), game_id: $( "#join_game" ).attr('game_id')};
+		var positions = getShipLocations();
+		var input = { player: $('#my_id').attr('value'), game_id: $( "#join_game" ).attr('game_id'), ships: positions};
 		dispatcher.trigger('join_game', input);
 		return false;
 	});
@@ -78,7 +92,6 @@ ready = function() {
 		if(current_player == $('#my_id').attr('value')){
 			if(!($( this ).hasClass( "miss_shot" ) || $( this ).hasClass( "hit" ))){
 				var shot = (e.target.id).split("-");
-				$(this).addClass( "miss_shot" );
 				shot = { player: $('#my_id').attr('value'),
 							game_id: $("#my_board").attr("value"),
 							x: shot[1],
@@ -89,7 +102,7 @@ ready = function() {
 			}
 			$( this ).removeClass( "valid_click" );
 		} else {
-
+			alert("Sorry not your turn");
 		}
 	});
 
@@ -105,11 +118,11 @@ ready = function() {
 					toApend = toApend + '<tr><td>'+(i+1)+'</td>';
 				}
 				if(result[i][j] == 1){
-					icon = "M";
+//					icon = "M";
 				}else if(result[i][j] == 2){
-					icon = "H";
+//					icon = "H";
 				}else if(result[i][j] == 3){
-					icon = "S";
+//					icon = "S";
 				}
 
 				toApend = toApend + '<td class="table_cell valid_click" id="e-'+i+'-'+j+'"></td>';
@@ -143,7 +156,6 @@ ready = function() {
         "ui-droppable-hover": "table_hover"
       },
       drop: function( event, ui ) {
-      	console.log("drop!!!");
         $(ui.draggable).detach().css({top: 0,left: 0}).appendTo(this);
       }
     });
@@ -154,6 +166,18 @@ ready = function() {
 		$( "#opponent_board" ).attr("value", game_id);
 		draw_enemy_board('#opponent_board', enemyBoard);
 		return;
+	}
+
+	function getShipLocations(){
+		return jQuery.map($("#my_board").find("div"),function(e){			
+			var coordinates = new Object();
+			var position = (e.parentElement.id).split("-");
+			coordinates.x = position[1];
+			coordinates.y = position[2];
+			e.parentElement.classList.add("ship");
+			e.parentElement.removeChild(e);
+			return coordinates;
+		});
 	}
 };
 
