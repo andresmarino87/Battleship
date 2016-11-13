@@ -52,11 +52,10 @@ ready = function() {
 	});
 
 	channel.bind('take_the_shot',function(data){
-		console.log(data)
 		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shoot");
 		current_player = data.current_user_id;
 		if(data.player != $('#my_id').attr('value')){
-			$( '#m-'+data.x+'-'+data.y ).removeClass( "ship" );
+			$( '#m-'+data.x+'-'+data.y ).removeClass( "ship_cell" );
 			if(data.hit == 2){
 				$( '#m-'+data.x+'-'+data.y ).addClass( "hit" );
 			}else{
@@ -96,6 +95,7 @@ ready = function() {
 							game_id: $("#my_board").attr("value"),
 							x: shot[1],
 							y: shot[2]};
+
 				dispatcher.trigger('shoot_bullet', shot);
 			}else{
 				alert("Can't shoot to this cell");
@@ -105,6 +105,12 @@ ready = function() {
 			alert("Sorry not your turn");
 		}
 	});
+
+	setDragableShip("ship_a");
+	setDragableShip("ship_b");
+	setDragableShip("ship_c");
+	setDragableShip("ship_d");
+
 
 //	function draw_board(id,result,clickeable,owner){
 	function draw_enemy_board(id,result){
@@ -117,13 +123,6 @@ ready = function() {
 				if(j == 0){
 					toApend = toApend + '<tr><td>'+(i+1)+'</td>';
 				}
-				if(result[i][j] == 1){
-//					icon = "M";
-				}else if(result[i][j] == 2){
-//					icon = "H";
-				}else if(result[i][j] == 3){
-//					icon = "S";
-				}
 
 				toApend = toApend + '<td class="table_cell valid_click" id="e-'+i+'-'+j+'"></td>';
 				if(j == 9){
@@ -134,31 +133,38 @@ ready = function() {
 		}
 	}
 
-	$( ".ship" ).draggable({
+	function setDragableShip(item){
+		$( "."+item ).draggable({
 			revert : function(event, ui) {
-			// on older version of jQuery use "draggable"
-			// $(this).data("draggable")
-			// on 2.x versions of jQuery use "ui-draggable"
-			// $(this).data("ui-draggable")
-			$(this).data("uiDraggable").originalPosition = {
-				top : 0,
-				left : 0
-			};
-			// return boolean
-			return !event;
-			// that evaluate like this:
-			// return event !== false ? false : true;
-		}
-	});
-
+				return !event;
+			},drag: function ( event, ui ){
+				$(this).removeClass("ship_cell");
+				$(this).addClass(item);
+			},
+			start: function ( event, ui ){
+				$("#my_board").find("[type="+$(this).attr("type")+"]").not($(this)).remove();
+			}
+		});
+	}
+	
 	$( ".droppable_ship" ).droppable({
 		classes: {
 			"ui-droppable-hover": "table_hover"
 		},
 		drop: function( event, ui ) {
-			console.log($(this).find("div").length);
-			if($(this).find("div").length == 0){
-				$(ui.draggable).detach().css({top: 0,left: 0}).appendTo(this);
+			var position = ($(this).attr('id')).split("-");
+			var otherId = '#m-'+(parseInt(position[1]))+'-'+(parseInt(position[2])+1);
+			var cen = (parseInt(position[2]) < 9);
+			if(cen){
+				if($(this).find("div").length == 0 && $( otherId ).find("div").length == 0){
+					var type = $(ui.draggable).attr( "type" );
+					$(ui.draggable).remove();
+					$(this).append( "<div class='ship_cell' type='" + type + "'></div>" );
+					$(otherId).append( "<div class='ship_cell' type='" + type + "'></div>" );
+					setDragableShip("ship_cell");
+				}else{
+					$( ui.draggable ).draggable({revert:true});
+				}
 			}else{
 				$( ui.draggable ).draggable({revert:true});
 			}
@@ -179,7 +185,7 @@ ready = function() {
 			var position = (e.parentElement.id).split("-");
 			coordinates.x = position[1];
 			coordinates.y = position[2];
-			e.parentElement.classList.add("ship");
+			e.parentElement.classList.add("ship_cell");
 			e.parentElement.removeChild(e);
 			return coordinates;
 		});

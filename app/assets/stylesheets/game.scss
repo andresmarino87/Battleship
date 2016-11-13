@@ -36,7 +36,7 @@ table{
 }
 
 .miss_shot {
-	width: 40px;
+	width: 39px;
 	height: 40px;
 	border: 1px solid $color-miss-shot;
 	padding: 0;
@@ -44,7 +44,7 @@ table{
 }
 
 .hit {
-	width: 40px;
+	width: 39px;
 	height: 40px;
 	border: 1px solid $color-hit;
 	padding: 0;
@@ -60,10 +60,41 @@ table{
 	height: 100px;
 }
 
-.ship {
-	width: 40px;
+.ship_a {
+	width: 79px;
 	height: 40px;
+	background-color: $color-ship;
 	border: 1px solid $color-ship-border;
+	padding: 0;
+}
+
+.ship_b {
+	width: 119px;
+	height: 40px;
+	background-color: $color-ship;
+	border: 1px solid $color-ship-border;
+	padding: 0;
+}
+
+.ship_c {
+	width: 159px;
+	height: 40px;
+	background-color: $color-ship;
+	border: 1px solid $color-ship-border;
+	padding: 0;
+}
+
+.ship_d {
+	width: 199px;
+	height: 40px;
+	background-color: $color-ship;
+	border: 1px solid $color-ship-border;
+	padding: 0;
+}
+
+.ship_cell {
+	width: 39px;
+	height: 40px;
 	background-color: $color-ship;
 	padding: 0;
 }
