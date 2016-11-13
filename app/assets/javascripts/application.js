@@ -22,7 +22,7 @@ var ready;
 ready = function() {
 	$( '#join_game' ).hide();
 	var current_player = null;
-    var dispatcher = new WebSocketRails('rubybattleship.herokuapp.com/websocket');
+	var dispatcher = new WebSocketRails('rubybattleship.herokuapp.com/websocket');
 //	var dispatcher = new WebSocketRails('localhost:3000/websocket');
 	dispatcher.on_open = function(data) {
 		console.log('Connection has been established: ', data);
@@ -51,8 +51,8 @@ ready = function() {
 		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shoot");
 	});
 
-    channel.bind('take_the_shot',function(data){
-    	console.log(data)
+	channel.bind('take_the_shot',function(data){
+		console.log(data)
 		$( "#current_update_text" ).text("Player "+data.current_user_id+" has to shoot");
 		current_player = data.current_user_id;
 		if(data.player != $('#my_id').attr('value')){
@@ -70,7 +70,7 @@ ready = function() {
 			}
 		
 		}
-    });
+	});
 
 	//Create a new game
 	$( "#create_game" ).click(function(){
@@ -136,29 +136,34 @@ ready = function() {
 
 	$( ".ship" ).draggable({
 			revert : function(event, ui) {
-            // on older version of jQuery use "draggable"
-            // $(this).data("draggable")
-            // on 2.x versions of jQuery use "ui-draggable"
-            // $(this).data("ui-draggable")
-            $(this).data("uiDraggable").originalPosition = {
-                top : 0,
-                left : 0
-            };
-            // return boolean
-            return !event;
-            // that evaluate like this:
-            // return event !== false ? false : true;
-        }
+			// on older version of jQuery use "draggable"
+			// $(this).data("draggable")
+			// on 2.x versions of jQuery use "ui-draggable"
+			// $(this).data("ui-draggable")
+			$(this).data("uiDraggable").originalPosition = {
+				top : 0,
+				left : 0
+			};
+			// return boolean
+			return !event;
+			// that evaluate like this:
+			// return event !== false ? false : true;
+		}
 	});
 
 	$( ".droppable_ship" ).droppable({
 		classes: {
-        "ui-droppable-hover": "table_hover"
-      },
-      drop: function( event, ui ) {
-        $(ui.draggable).detach().css({top: 0,left: 0}).appendTo(this);
-      }
-    });
+			"ui-droppable-hover": "table_hover"
+		},
+		drop: function( event, ui ) {
+			console.log($(this).find("div").length);
+			if($(this).find("div").length == 0){
+				$(ui.draggable).detach().css({top: 0,left: 0}).appendTo(this);
+			}else{
+				$( ui.draggable ).draggable({revert:true});
+			}
+		}
+	});
 
 	function initTable(user_id, game_id, myBoard, enemyBoard){
 		current_player = user_id;

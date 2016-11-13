@@ -6,7 +6,7 @@ $color-sea: #b4b4ff;
 $color-sea-hover: #4c4cff;
 $color-ship: rgba(0,0,0,0.5);
 $color-ship-border: #000;
-$color-miss-shot: #A74CAB;
+$color-miss-shot: #0EBFE9;
 $color-hit: #FF030D;
 $color-ship: #BDBDBD;
 
@@ -54,7 +54,7 @@ table{
 
 .table_hover {
 	border-collapse: collapse;
-	background-color: rgba(230,135,128,0.5);
+	background-color: $color-hit;
 	float: left;
 	width: 200px;
 	height: 100px;
