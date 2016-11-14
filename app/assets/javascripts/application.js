@@ -148,7 +148,6 @@ ready = function() {
 	function setDragableShip(item){
 		$( "."+item ).draggable({
 			revert : function(event, ui) {
-				console.log("revert");
 				$("#my_board").find("[type="+$(this).attr("type")+"]").show();
 				return !event;
 			},start: function ( event, ui ){
@@ -165,19 +164,20 @@ ready = function() {
 				var position = ($(this).attr('id')).split("-");
 				var cen = false;
 				var ids = [];
-				if( $(ui.draggable).attr('type').indexOf("a") != -1 ){
+				var type = $(ui.draggable).attr( "type" );
+				if( type.indexOf("a") != -1 ){
 					cen = (parseInt(position[2]) < 9);
 					ids.push('#m-'+(parseInt(position[1]))+'-'+(parseInt(position[2])+1));
-				}else if( $(ui.draggable).attr('type').indexOf("b") != -1 ){
+				}else if( type.indexOf("b") != -1 ){
 					cen = (parseInt(position[2]) < 8);
 					ids.push('#m-'+(parseInt(position[1]))+'-'+(parseInt(position[2])+1));
 					ids.push('#m-'+(parseInt(position[1]))+'-'+(parseInt(position[2])+2));
-				}else if( $(ui.draggable).attr('type').indexOf("c") != -1 ){
+				}else if( type.indexOf("c") != -1 ){
 					cen = (parseInt(position[2]) < 7);
 					ids.push('#m-'+(parseInt(position[1]))+'-'+(parseInt(position[2])+1));
 					ids.push('#m-'+(parseInt(position[1]))+'-'+(parseInt(position[2])+2));
 					ids.push('#m-'+(parseInt(position[1]))+'-'+(parseInt(position[2])+3));
-				}else if( $(ui.draggable).attr('type').indexOf("d") != -1 ){
+				}else if( type.indexOf("d") != -1 ){
 					cen = (parseInt(position[2]) < 6);
 					ids.push('#m-'+(parseInt(position[1]))+'-'+(parseInt(position[2])+1));
 					ids.push('#m-'+(parseInt(position[1]))+'-'+(parseInt(position[2])+2));
@@ -188,11 +188,9 @@ ready = function() {
 				if(cen){
 					cen = true;
 					$.each(ids,function(key, value){
-						cen = cen && ($(value).find("div").length == 0);
+						cen = cen && ($(value).find("div").attr( "type" ) == type || ($(value).find("div").length == 0));
 					}); 
-
 					if($(this).find("div").length == 0 && cen){
-						var type = $(ui.draggable).attr( "type" );
 						$("#my_board").find("[type="+type+"]").not($(ui.draggable)).remove();
 						$(ui.draggable).remove();
 						$(this).append( "<div class='ship_cell' type='" + type + "'></div>" );
@@ -201,11 +199,11 @@ ready = function() {
 						}); 
 						setDragableShip("ship_cell");
 					}else{
-						$("#my_board").find("[type="+$(ui.draggable).attr("type")+"]").show();
+						$("#my_board").find("[type="+type+"]").show();
 						$( ui.draggable ).draggable({revert:true});
 					}
 				}else{
-					$("#my_board").find("[type="+$(ui.draggable).attr("type")+"]").show();
+					$("#my_board").find("[type="+type+"]").show();
 					$( ui.draggable ).draggable({revert:true});
 				}
 		}
