@@ -198,7 +198,7 @@ ready = function() {
 					$.each(ids,function(key, value){
 						cen = cen && ($(value).find("div").attr( "type" ) == type || ($(value).find("div").length == 0));
 					}); 
-					if(($(this).find("div").attr( "type" ) || $(this).find("div").length == 0) && cen){
+					if(($(this).find("div").attr( "type" ) == type || $(this).find("div").length == 0) && cen){
 						$("#my_board").find("[type="+type+"]").not($(ui.draggable)).remove();
 						$(ui.draggable).remove();
 						$(this).append( "<div class='ship_cell' type='" + type + "'></div>" );
