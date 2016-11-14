@@ -69,6 +69,10 @@ ready = function() {
 			}
 		
 		}
+		if(data.game_over){
+			$( "#current_update_text" ).text("Player "+current_player+" win");
+			$( "#opponent_board" ).find("td").removeClass( "valid_click" );
+		}
 	});
 
 	//Create a new game

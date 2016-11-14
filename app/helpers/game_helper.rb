@@ -49,6 +49,14 @@ module GameHelper
 			message[:hit] = 1
 			@game.toggle_current_player
 		end
+		if(check_if_game_is_over(@board.board[index]))
+			message[:game_over] = false
+			@game[:state] = "playing"
+		else
+			message[:game_over] = true
+			@game[:state] = "finished"
+		end
+
 		@board.save
 		return ( @game.as_json ).merge(message.as_json)
 	end
@@ -58,5 +66,15 @@ module GameHelper
 		ships.each do |ship|
 			board[board_index][ship[:x].to_i][ship[:y].to_i] = 3
 		end
+	end
+
+	def check_if_game_is_over(board)
+		result = false
+		board.each do |row|
+			row.each do |item|
+				result = result || (item == 3)
+			end
+		end 
+		return result;
 	end
 end
