@@ -166,9 +166,7 @@ ready = function() {
 	}
 	
 	$( ".droppable_ship" ).droppable({
-		classes: {
-			"ui-droppable-hover": "table_hover"
-		},
+		hoverClass: "table_hover",
 		drop: function( event, ui ) {
 				var position = ($(this).attr('id')).split("-");
 				var cen = false;
