@@ -146,6 +146,16 @@ ready = function() {
 	}
 
 	function setDragableShip(item){
+	/*	$('.'+item ).click(function() {
+		    $(this).css({
+			    '-moz-transform':'rotate(90deg)',
+			    '-webkit-transform':'rotate(90deg)',
+		    	'-o-transform':'rotate(90deg)',
+		    	'-ms-transform':'rotate(90deg)',
+			    'transform':'rotate(90deg)'
+			});
+	//	});*/
+
 		$( "."+item ).draggable({
 			revert : function(event, ui) {
 				$("#my_board").find("[type="+$(this).attr("type")+"]").show();
@@ -165,6 +175,7 @@ ready = function() {
 				var cen = false;
 				var ids = [];
 				var type = $(ui.draggable).attr( "type" );
+				var direction = $(ui.draggable).attr( "direction" );
 				if( type.indexOf("a") != -1 ){
 					cen = (parseInt(position[2]) < 9);
 					ids.push('#m-'+(parseInt(position[1]))+'-'+(parseInt(position[2])+1));
