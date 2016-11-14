@@ -118,13 +118,12 @@ ready = function() {
 		}
 	});
 
+	//Set up the ship for draggable mode
 	setDragableShip("ship_a");
 	setDragableShip("ship_b");
 	setDragableShip("ship_c");
 	setDragableShip("ship_d");
 
-
-//	function draw_board(id,result,clickeable,owner){
 	function draw_enemy_board(id,result){
 		$( id ).append('<tr><th></th><th><p>A</p></th><th><p>B</p></th><th><p>C</p></th><th><p>D</p></th><th><p>E</p></th><th><p>F</p></th><th><p>G</p></th><th><p>H</p></th><th><p>I</p></th><th><p>J</p></th></tr>');
 		for (var i = 0; i < 10; i++) {
