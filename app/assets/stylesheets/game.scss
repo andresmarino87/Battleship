@@ -38,7 +38,6 @@ table{
 .miss_shot {
 	width: 39px;
 	height: 40px;
-	border: 1px solid $color-miss-shot;
 	padding: 0;
 	background-color: $color-miss-shot;
 }
@@ -46,7 +45,6 @@ table{
 .hit {
 	width: 39px;
 	height: 40px;
-	border: 1px solid $color-hit;
 	padding: 0;
 	background-color: $color-hit;
 }

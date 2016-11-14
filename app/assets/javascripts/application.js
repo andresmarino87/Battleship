@@ -73,17 +73,25 @@ ready = function() {
 
 	//Create a new game
 	$( "#create_game" ).click(function(){
-		var positions = getShipLocations();
-		var input = { player: $('#my_id').attr('value'), ships: positions};
-		dispatcher.trigger('create_game', input);
+		if($("#my_board").find("div").length == 30){	
+			var positions = getShipLocations();
+			var input = { player: $('#my_id').attr('value'), ships: positions};
+			dispatcher.trigger('create_game', input);
+		}else{
+			alert("Please place all ship on the table");
+		}
 		return false;
 	});
 
 	//Join a existing game
 	$( "#join_game" ).click(function(){
-		var positions = getShipLocations();
-		var input = { player: $('#my_id').attr('value'), game_id: $( "#join_game" ).attr('game_id'), ships: positions};
-		dispatcher.trigger('join_game', input);
+		if($("#my_board").find("div").length == 30){	
+			var positions = getShipLocations();
+			var input = { player: $('#my_id').attr('value'), game_id: $( "#join_game" ).attr('game_id'), ships: positions};
+			dispatcher.trigger('join_game', input);
+		}else{
+			alert("Please place all ship on the table");
+		}
 		return false;
 	});
 
