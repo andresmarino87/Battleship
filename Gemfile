@@ -29,6 +29,10 @@ gem 'autoprefixer-rails'
 gem 'websocket-rails'
 gem 'faye-websocket', '0.10.0'
 
+gem 'devise'
+gem 'omniauth'
+gem 'omniauth-twitter'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
