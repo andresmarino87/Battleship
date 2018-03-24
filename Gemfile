@@ -24,7 +24,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'responders', '~> 2.0'
 
-gem 'bootstrap-sass', '~> 3.2.0'
+gem 'bootstrap-sass'
 gem 'autoprefixer-rails'
 gem 'websocket-rails'
 gem 'faye-websocket', '0.10.0'
